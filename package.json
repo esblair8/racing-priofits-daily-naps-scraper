@@ -1,0 +1,26 @@
+{
+  "name": "web-scraping-tutorial",
+  "version": "1.0.0",
+  "description": "",
+  "main": "rpNapsScraper.js",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "json-2-csv": "^3.6.1",
+    "moment": "^2.24.0",
+    "puppeteer": "^2.1.1",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "potus": "node potusScraper.js",
+    "reddit": "node redditScraper.js",
+    "naps": "node rpNapsScraper.js"
+  },
+  "bin": {
+    "naps": "./rpNapsScraper.js"
+  },
+  "author": "Evan Blair",
+  "license": "ISC"
+}
