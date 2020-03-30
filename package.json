@@ -1,9 +1,10 @@
 {
   "name": "web-scraping-tutorial",
   "version": "1.0.0",
-  "description": "",
+  "description": "web scraper that will scrape  'https://www.racingpost.com/tipping/naps-table' for daily naps",
   "main": "rpNapsScraper.js",
   "dependencies": {
+    "async-require": "^1.2.2",
     "cheerio": "^1.0.0-rc.3",
     "json-2-csv": "^3.6.1",
     "moment": "^2.24.0",
@@ -13,13 +14,14 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "potus": "node potusScraper.js",
-    "reddit": "node redditScraper.js",
-    "naps": "node rpNapsScraper.js"
+    "naps": "node src/napsScraper.js",
+    "forecasts": "node src/racecardScraper.js",
+    "selections": "npm run naps && npm run forecasts"
   },
   "bin": {
-    "naps": "./rpNapsScraper.js"
+    "naps": "./racingPostNapsScraper.js",
+    "forecasts": "./racingPostRacecardScraper.js",
+    "selections": "./racingPostNapsScraper.js && ./racingPostRacecardScraper"
   },
   "author": "Evan Blair",
   "license": "ISC"
