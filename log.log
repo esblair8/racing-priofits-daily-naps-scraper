@@ -1,0 +1,13 @@
+
+> web-scraping-tutorial@1.0.0 racing-tips /Users/evabla01/Projects/node/daily-naps-scraper
+> node src/racingTipsScraper.js
+
+Analysing racingtips.com selections.
+Starting set up.
+url https://www.racingtips.com/tips/
+Set up complete.
+Parsing html.
+uniqueSelections []
+File already exists.
+Appending to file.
+Selections from https://www.racingtips.com/tips/ for 2020-03-31 written to /Users/evabla01/Documents/Selections/racing-tips.csv
