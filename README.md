@@ -22,12 +22,19 @@ Output
         '/Users/{user}/Documents/Selections/forecasts.csv'
 
 Further Work
-    1) Color outputs
-    2) Post data to Google Sheets for storage in cloud - append to existing Sheet.
-    3) Properly format this README
-    4) Create Runner file that accepts scraping logic function, and file name. 
-            The runner should incapsulate the common tasks such as setup ands writing to files.
-    5) Rename folder / git repo to horse-racing-scrapers
+    New features
+        * Add support for retrieving RPR ratings and calculasting stats like count, range median and mean
+        * Add support for retreiving POST DATA Favourite
+        * Add support for retreiving the horse that have been tiopped by others
+        * Post data to Google Sheets for storage in cloud - append to existing Sheet
 
-Notes
-     Only tested on MacOS
+    Tech Debt
+        * Properly format this README
+        * Create Runner file that accepts scraping logic function, and file name
+                The runner should incapsulate the common tasks such as setup ands writing to files
+        * Rename folder / git repo to horse-racing-scrapers
+        * Add this further work section to github issues for tracking
+
+Note"
+     Only tested on MacOS - need to add support for windows file system conventions ("C:\...")
+        This problem goes away if data posted to google sheets instead of written to local FS 
