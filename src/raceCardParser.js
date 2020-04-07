@@ -1,11 +1,10 @@
 const puppeteer = require('puppeteer')
 const $ = require('cheerio')
 
-module.exports = url => {
+module.exports = (url , browser) => {
 	console.log('Parsing url', url)
 
-	return puppeteer.launch()
-		.then(browser => browser.newPage())
+	return browser => browser.newPage()
 		.then(page => page.goto(url).then(() => page.content()))
 		.then(html => {
 			const raceName = $('.RC-cardHeader__courseDetails', html).first().text().split('\n')[4].trim()
@@ -32,6 +31,5 @@ module.exports = url => {
 		})
 		.catch(err => {
 			console.error('Error', err)
-			process.exit()
 		})
 }
