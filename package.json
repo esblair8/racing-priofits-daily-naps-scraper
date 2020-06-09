@@ -9,6 +9,9 @@
     "json-2-csv": "^3.6.1",
     "moment": "^2.24.0",
     "puppeteer": "^2.1.1",
+    "puppeteer-extra": "^3.1.9",
+    "puppeteer-extra-plugin-adblocker": "^2.11.3",
+    "puppeteer-extra-plugin-stealth": "^2.4.9",
     "request": "^2.88.2",
     "request-promise": "^4.2.5"
   },

@@ -1,11 +1,18 @@
 const puppeteer = require('puppeteer')
 const $ = require('cheerio')
 
-module.exports = (url , browser) => {
+module.exports = (url) => {
 	console.log('Parsing url', url)
 
-	return browser => browser.newPage()
-		.then(page => page.goto(url).then(() => page.content()))
+	return puppeteer.launch({ userDataDir: './.data' })
+		.then(browser => {
+			const page =  browser.newPage()
+			return page
+		})
+		.then(page => {
+			const content = page.goto(url, { timeout: 0 }).then(() => page.content()) //.goto function options: { waitUntil: 'load', timeout: 0 }
+			return content
+		})
 		.then(html => {
 			const raceName = $('.RC-cardHeader__courseDetails', html).first().text().split('\n')[4].trim()
 			const handicap = raceName.toLowerCase().includes('handicap')

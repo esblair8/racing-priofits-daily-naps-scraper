@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const puppeteer = require('puppeteer')
+
 const $ = require('cheerio')
 const moment = require('moment')
 
@@ -25,13 +26,17 @@ puppeteer.launch()
         console.info('Parsing html.')
         return $('.tn-napsTable__row', html).map(function () {
             return {
-                course: $('.tn-napsTable__crs', this).text(),
+                date: todaysDate,
                 time: $('.tn-napsTable__time', this).text(),
+                course: $('.tn-napsTable__crs', this).text(),
                 selection: $('.tn-napsTable__naps', this).text().replace('right', '').trim()
             }
         })
     })
-    .then(selections => write(selections.toArray(), 'naps.csv'))
+    .then(selections => {
+        return write(selections.toArray(), 'naps.csv')
+    })
+
     .then(documentPath => {
         console.info(`Naps for ${todaysDate} written to ${documentPath}`)
         process.exit()
