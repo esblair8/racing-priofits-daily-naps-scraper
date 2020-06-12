@@ -7,9 +7,11 @@ module.exports = (selections, file) => {
     const filePath = `${dir}/${file}`
     if (fs.existsSync(filePath)) {
         console.info('File already exists.')
+
         return converter.json2csvAsync(selections, { prependHeader: false })
             .then(function (rows) {
                 console.info('Appending to file.')
+            //    console.log(rows)
                 fs.appendFileSync(filePath, rows + '\n', { prependHeader: true })
                 return filePath
             })
@@ -20,7 +22,8 @@ module.exports = (selections, file) => {
         return converter.json2csvAsync(selections, { prependHeader: true })
             .then(function (rows, err) {
                 console.info('Writing to file.')
-                fs.appendFileSync(filePath, rows + '\n', { flag: 'a' })
+             //   console.log(rows)
+               fs.appendFileSync(filePath, rows + '\n', { flag: 'a' })
                 return filePath
             })
     }

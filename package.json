@@ -7,13 +7,15 @@
     "async-require": "^1.2.2",
     "cheerio": "^1.0.0-rc.3",
     "json-2-csv": "^3.6.1",
+    "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "puppeteer": "^2.1.1",
     "puppeteer-extra": "^3.1.9",
     "puppeteer-extra-plugin-adblocker": "^2.11.3",
     "puppeteer-extra-plugin-stealth": "^2.4.9",
     "request": "^2.88.2",
-    "request-promise": "^4.2.5"
+    "request-promise": "^4.2.5",
+    "stats-lite": "^2.2.0"
   },
   "devDependencies": {},
   "scripts": {

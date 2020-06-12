@@ -1,42 +1,78 @@
 const puppeteer = require('puppeteer')
 const $ = require('cheerio')
+const moment = require('moment')
+const stats = require('stats-lite')
+const todaysDate = moment().format('YYYY-MM-DD')
 
 module.exports = (url) => {
 	console.log('Parsing url', url)
 
 	return puppeteer.launch({ userDataDir: './.data' })
 		.then(browser => {
-			const page =  browser.newPage()
+			const page = browser.newPage()
 			return page
 		})
-		.then(page => {
-			const content = page.goto(url, { timeout: 0 }).then(() => page.content()) //.goto function options: { waitUntil: 'load', timeout: 0 }
-			return content
-		})
+		.then(page => page.goto(url, { waitUntil: 'load', timeout: 0 }).then(() => page.content()))
 		.then(html => {
-			const raceName = $('.RC-cardHeader__courseDetails', html).first().text().split('\n')[4].trim()
+			
+			const raceName = $('[data-test-selector=RC-header__raceInstanceTitle]', html).first().text().trim()
 			const handicap = raceName.toLowerCase().includes('handicap')
-			const forecastFavourite = $('.RC-raceFooterInfo__runner', html).first().text()
-			const runners = $('.RC-headerBox__infoRow__content', html).slice(1, 2).text().trim()
+			const forecastFavourite = $('[data-test-selector=RC-bettingForecast_link]', html).first().text().trim()
+			const runners = $('.RC-headerBox__infoRow__content', html).slice(1, 2).text().replace(/\s\s+/g, ' ').trim()
 			const distance = $('.RC-cardHeader__distance', html).first().text().trim()
-			const date = $('.RC-courseHeader__date', html).first().text().trim().split('\n')[0].toString().trim()
+			const date = todaysDate
 			const time = $('.RC-courseHeader__time', html).text().trim()
-			const meeting = $('.RC-courseTime__link', html).first().text().trim().split('  ')[0]
-			const country = $('.RC-courseTime__link', html).first().text().trim().split('  ').pop().replace('(', '').replace(')', '')
-
-			return {
+			const meeting = $('[data-test-selector=RC-courseHeader__name]', html).first().text().trim()
+			let row = {
 				date,
 				time,
-				country,
 				meeting,
-				raceName,
-				handicap,
 				runners,
 				distance,
-				forecastFavourite
+				forecastFavourite,
+				raceName,
+				handicap,
 			}
+			if (!handicap) row.url = url
+			return row
 		})
 		.catch(err => {
 			console.error('Error', err)
 		})
+}
+
+/**
+ *  FUNCTION NOT USED YET- NEED TO WORK OUT HOW TO WAIT ON FULL PAGE LOADING
+ */
+function addExtraDataForNationalHuntSystem(html, row, forecastFavourite) {
+
+	const rprData = $('[data-test-selector=RC-postdata__rprColumn]', html).text().first().trim()
+	const rprMax = Math.max(rprData)
+	const rprMin = Math.min(rprData)
+	const rprRange = rprMax - rprMin
+	const rprMedian = stats.median(rprData)
+	const rprMean = stats.mean(rprData)
+	const postDataFavourite = $('[data-test-selector=RC-selection__horseName]', html).first().text().trim()
+	const tipCount = $('.RC-selections__horse', html).toArray() //TODO filter for row.forecastFavourite and get the number of tips.
+	// distinctTips = //TODO: count distinct number of tips, by name)
+	//const tipCountLte5 = tipCount <= 5
+	
+	row.rpPdIsTheSame = postDataFavourite === forecastFavourite
+	row.postDataFavourite = postDataFavourite
+	row.rprMin = rprMin
+	row.rprMax = rprMax
+	row.rprRange = rprRange
+	row.rprMean = rprMean
+	row.rprMedian = rprMedian
+
+	return row
+}
+
+/**
+ * FUNCTION NOT USED
+ */
+function delay(time) {
+	return new Promise(function (resolve) {
+		setTimeout(resolve, time)
+	})
 }
