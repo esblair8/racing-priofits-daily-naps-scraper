@@ -4,41 +4,36 @@ const moment = require('moment')
 const stats = require('stats-lite')
 const todaysDate = moment().format('YYYY-MM-DD')
 
-module.exports = (url) => {
+module.exports = async (url, browser) => {
 	console.log('Parsing url', url)
+	const page = await browser.newPage()
+	const html = await page.goto(url, { waitUntil: 'load', timeout: 0 }).then(() => page.content())
+	return parsePageForSelections(html, url)
+}
 
-	return puppeteer.launch({ userDataDir: './.data' })
-		.then(browser => {
-			const page = browser.newPage()
-			return page
-		})
-		.then(page => page.goto(url, { waitUntil: 'load', timeout: 0 }).then(() => page.content()))
-		.then(html => {
+const parsePageForSelections = (html, url) => {
+	const raceName = $('[data-test-selector=RC-header__raceInstanceTitle]', html).first().text().trim()
+	const handicap = raceName.toLowerCase().includes('handicap')
+	const forecastFavourite = $('[data-test-selector=RC-bettingForecast_link]', html).first().text().trim()
+	const runners = $('.RC-headerBox__infoRow__content', html).slice(1, 2).text().replace(/\s\s+/g, ' ').trim()
+	const distance = $('.RC-cardHeader__distance', html).first().text().trim()
+	const date = todaysDate
+	const time = $('.RC-courseHeader__time', html).text().trim()
+	const meeting = $('[data-test-selector=RC-courseHeader__name]', html).first().text().trim()
+	const tvChannel = $('.RC-courseHeader__tv', html).first().text().trim()
 
-			const raceName = $('[data-test-selector=RC-header__raceInstanceTitle]', html).first().text().trim()
-			const handicap = raceName.toLowerCase().includes('handicap')
-			const forecastFavourite = $('[data-test-selector=RC-bettingForecast_link]', html).first().text().trim()
-			const runners = $('.RC-headerBox__infoRow__content', html).slice(1, 2).text().replace(/\s\s+/g, ' ').trim()
-			const distance = $('.RC-cardHeader__distance', html).first().text().trim()
-			const date = todaysDate
-			const time = $('.RC-courseHeader__time', html).text().trim()
-			const meeting = $('[data-test-selector=RC-courseHeader__name]', html).first().text().trim()
-
-			return {
-				date,
-				time,
-				meeting,
-				runners,
-				distance,
-				forecastFavourite,
-				raceName,
-				handicap,
-				url
-			}
-		})
-		.catch(err => {
-			console.error('Error', err)
-		})
+	return {
+		date,
+		time,
+		meeting,
+		runners,
+		distance,
+		forecastFavourite,
+		tvChannel,
+		raceName,
+		handicap,
+		url
+	}
 }
 
 /**
