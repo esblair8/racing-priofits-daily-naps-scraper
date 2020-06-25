@@ -14,7 +14,7 @@ module.exports = (url) => {
 		})
 		.then(page => page.goto(url, { waitUntil: 'load', timeout: 0 }).then(() => page.content()))
 		.then(html => {
-			
+
 			const raceName = $('[data-test-selector=RC-header__raceInstanceTitle]', html).first().text().trim()
 			const handicap = raceName.toLowerCase().includes('handicap')
 			const forecastFavourite = $('[data-test-selector=RC-bettingForecast_link]', html).first().text().trim()
@@ -23,7 +23,8 @@ module.exports = (url) => {
 			const date = todaysDate
 			const time = $('.RC-courseHeader__time', html).text().trim()
 			const meeting = $('[data-test-selector=RC-courseHeader__name]', html).first().text().trim()
-			let row = {
+
+			return {
 				date,
 				time,
 				meeting,
@@ -32,9 +33,8 @@ module.exports = (url) => {
 				forecastFavourite,
 				raceName,
 				handicap,
+				url
 			}
-			if (!handicap) row.url = url
-			return row
 		})
 		.catch(err => {
 			console.error('Error', err)
@@ -42,7 +42,8 @@ module.exports = (url) => {
 }
 
 /**
- *  FUNCTION NOT USED YET- NEED TO WORK OUT HOW TO WAIT ON FULL PAGE LOADING
+ *  FUNCTION NOT USED YET- NEED TO SUBSCRIBE TO RACINGPOST WHEN JUMS SEASON STARTS
+ * 	CANT GET ACCESS TO /PRO ENDPOINT WITHOUT BEING A PADI SUBSCRIBER
  */
 function addExtraDataForNationalHuntSystem(html, row, forecastFavourite) {
 
@@ -56,7 +57,7 @@ function addExtraDataForNationalHuntSystem(html, row, forecastFavourite) {
 	const tipCount = $('.RC-selections__horse', html).toArray() //TODO filter for row.forecastFavourite and get the number of tips.
 	// distinctTips = //TODO: count distinct number of tips, by name)
 	//const tipCountLte5 = tipCount <= 5
-	
+
 	row.rpPdIsTheSame = postDataFavourite === forecastFavourite
 	row.postDataFavourite = postDataFavourite
 	row.rprMin = rprMin

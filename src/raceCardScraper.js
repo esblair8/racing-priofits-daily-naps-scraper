@@ -10,22 +10,32 @@ const raceCards = 'https://www.racingpost.com/racecards/'
 const todaysDate = moment().format('YYYY-MM-DD')
 
 const meetings = [
-    'chelmsford-aw',
-    'lingfield-aw',
+    'ascot',
+    'ayr',
+    'bath',
     'beverley',
-    'haydock',
-    'wolverhampton-aw',
-    'newcastle',
-    'pontefract',
-    'yarmouth',
-    'kempton-aw',
     'beverly',
-    'newbury',
+    'chelmsford-aw',
+    'chepstow',
     'doncaster',
-    'sandown',
-    'leicester',
     'goodwood',
-    'newmarket'
+    'hamilton',
+    'haydock',
+    'kempton-aw',
+    'leicester',
+    'leicester',
+    'lingfield-aw',
+    'newbury',
+    'newcastle',
+    'newmarket',
+    'pontefract',
+    'redcar',
+    'ripon',
+    'sandown',
+    'thirsk',
+    'windsor',
+    'wolverhampton-aw',
+    'yarmouth'
 ]
 
 require('events').EventEmitter.defaultMaxListeners = 100
@@ -46,7 +56,7 @@ puppeteer.launch({ userDataDir: './data' })
                 request.abort();
             }
         })
-        const content = page.goto(raceCards, {waitUntil: 'networkidle0', timeout: 0}).then(() => page.content())
+        const content = page.goto(raceCards, { waitUntil: 'networkidle0', timeout: 0 }).then(() => page.content())
         console.info('Set up complete.')
         return content
     })
@@ -61,18 +71,18 @@ puppeteer.launch({ userDataDir: './data' })
             })
     })
     .then(async links => {
-        const raceCardInfo = links.toArray() .filter(link => meetings.includes(link.split("/")[3]))
+        const raceCardInfo = links.toArray().filter(link => meetings.includes(link.split("/")[3]))
         const uniqueRaceCardInfo = [...new Set(raceCardInfo)]
         const chunkedUrls = chunkArray(uniqueRaceCardInfo, 6)
-        
+
         const selections_1 = chunkedUrls[0].map(link => raceCardParser(`https://www.racingpost.com${link}/pro`))
         console.log('...resolving batch 1 of race cards')
         const selections_1_resolved = await Promise.all(selections_1)
-      
+
         const selections_2 = chunkedUrls[1].map(link => raceCardParser(`https://www.racingpost.com${link}/pro`))
         console.log('...resolving batch 2 of race cards')
         const selections_2_resolved = await Promise.all(selections_2)
-        
+
         const selections_3 = chunkedUrls[2].map(link => raceCardParser(`https://www.racingpost.com${link}/pro`))
         console.log('...resolving batch 3 of race cards')
         const selections_3_resolved = await Promise.all(selections_3)
@@ -88,11 +98,11 @@ puppeteer.launch({ userDataDir: './data' })
         const selections_6 = chunkedUrls[5].map(link => raceCardParser(`https://www.racingpost.com${link}/pro`))
         console.log('...resolving batch 6 of race cards')
         const selections_6_resolved = await Promise.all(selections_6)
-        
+
         return [
-            ...selections_1_resolved, 
-            ...selections_2_resolved, 
-            ...selections_3_resolved, 
+            ...selections_1_resolved,
+            ...selections_2_resolved,
+            ...selections_3_resolved,
             ...selections_4_resolved,
             ...selections_5_resolved,
             ...selections_6_resolved
@@ -109,14 +119,14 @@ puppeteer.launch({ userDataDir: './data' })
     .catch(err => {
         console.error('Error', err)
     })
-    
 
 
-    function chunkArray(arr,n){
-        var chunkLength = Math.max(arr.length/n ,1);
-        var chunks = [];
-        for (var i = 0; i < n; i++) {
-            if(chunkLength*(i+1)<=arr.length)chunks.push(arr.slice(chunkLength*i, chunkLength*(i+1)));
-        }
-        return chunks; 
+
+function chunkArray(arr, n) {
+    var chunkLength = Math.max(arr.length / n, 1);
+    var chunks = [];
+    for (var i = 0; i < n; i++) {
+        if (chunkLength * (i + 1) <= arr.length) chunks.push(arr.slice(chunkLength * i, chunkLength * (i + 1)));
     }
+    return chunks;
+}

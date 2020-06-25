@@ -21,11 +21,9 @@
   "scripts": {
     "naps": "node src/napsScraper.js",
     "forecasts": "node src/racecardScraper.js",
-    "selections": "npm run naps && npm run forecasts",
     "racing-tips": "node src/racingTipsScraper.js"
   },
   "bin": {
-    "naps": "./src/napsScraper.js",
     "forecasts": "./src/racecardScraper.js"
   },
   "author": "Evan Blair",
